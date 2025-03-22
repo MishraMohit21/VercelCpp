@@ -1,8 +1,6 @@
 #include "../include/HttpController.h"
 
-Aws::SDKOptions awsOptions;
-Aws::S3::S3Client* s3Client = nullptr;
-std::string s3BucketName = "vercelbutbetter";
+
 
 
 int main() {

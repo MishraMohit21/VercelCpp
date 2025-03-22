@@ -14,7 +14,7 @@ void setupAws()
         }
         
         // Create credentials object
-        auto credentials = Aws::MakeShared<Aws::Auth::SimpleAWSCredentialsProvider>(
+        auto credentials = Aws::MakeShared<Aws::Auth::AWSCredentialsProvider>(
             "S3Credentials", accessKeyId, secretAccessKey);
         
         // Create S3 client
