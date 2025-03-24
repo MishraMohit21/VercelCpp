@@ -5,7 +5,6 @@
 
 int main() {
 
-    setupAws(); 
 
     drogon::app().registerHandler("/hello",
         [](const drogon::HttpRequestPtr& req,
@@ -23,3 +22,6 @@ int main() {
 
     return 0;
 }
+
+
+

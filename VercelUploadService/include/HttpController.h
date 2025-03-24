@@ -1,5 +1,5 @@
 #pragma once
-#include "S3Manager.h"
+
 #include <drogon/drogon.h>
 #include <drogon/HttpResponse.h>
 #include <drogon/HttpTypes.h>

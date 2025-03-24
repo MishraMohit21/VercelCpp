@@ -1,5 +1,7 @@
 #include "../include/HttpController.h"
 #include "../include/FilesHandler.h"
+#include "../include/aws.h"
+#include <hiredis/hiredis.h>
 // #include "HttpController.h"
 
 
@@ -85,6 +87,39 @@ void handleDeployRoute(const drogon::HttpRequestPtr& req, Callback&& callback) {
     for (auto& file : filesList) {
         std::cout << "[" << file << "]\n"; 
     }
+
+    // UploadFile("index.html", "./index.html", "vercelclone");
+    
+    for (const auto& localPath : filesList) {
+        
+        std::string relativePath = localPath.substr(outputDir.length() + 1);
+        std::string filePath = "Output/" + id + "/" + relativePath;
+        // UploadFile(s3Key, filePath, "vercelclone");
+        uploadFileViaNode(filePath, localPath);
+
+    }
+    // 
+    // Radis ka section
+    //
+    redisContext *context = redisConnect("127.0.0.1", 6379);
+    if (context == nullptr || context->err) {
+        std::cerr << "Redis connection error: " << (context ? context->errstr : "Unknown error") << std::endl;
+        return;
+    }
+
+    std::cout << "Connected to Redis!" << std::endl;
+
+
+    redisReply *reply = (redisReply *)redisCommand(context, "LPUSH build-queue %s", id);
+    if (reply == nullptr) {
+        std::cerr << "LPUSH failed!" << std::endl;
+        redisFree(context);
+        return;
+    }
+    std::cout << "Pushed " << id << " to build-queue. Queue length: " << reply->integer << std::endl;
+    freeReplyObject(reply);
+
+    redisFree(context);
 
     // Create JSON response
     Json::Value result;
